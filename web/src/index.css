@@ -1,0 +1,138 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource-variable/geist";
+@import "@fontsource/instrument-serif";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+    --font-heading: 'Instrument Serif', ui-serif, Georgia, serif;
+    --font-sans: 'Geist Variable', ui-sans-serif, system-ui, sans-serif;
+    --color-gold: var(--gold);
+    --color-bubble: var(--bubble);
+    --color-bubble-own: var(--bubble-own);
+    --color-sidebar-ring: var(--sidebar-ring);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    --color-sidebar-accent: var(--sidebar-accent);
+    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    --color-sidebar-primary: var(--sidebar-primary);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+    --color-sidebar: var(--sidebar);
+    --color-chart-5: var(--chart-5);
+    --color-chart-4: var(--chart-4);
+    --color-chart-3: var(--chart-3);
+    --color-chart-2: var(--chart-2);
+    --color-chart-1: var(--chart-1);
+    --color-ring: var(--ring);
+    --color-input: var(--input);
+    --color-border: var(--border);
+    --color-destructive: var(--destructive);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-accent: var(--accent);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-muted: var(--muted);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-secondary: var(--secondary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-primary: var(--primary);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-popover: var(--popover);
+    --color-card-foreground: var(--card-foreground);
+    --color-card: var(--card);
+    --color-foreground: var(--foreground);
+    --color-background: var(--background);
+    --radius-sm: calc(var(--radius) * 0.6);
+    --radius-md: calc(var(--radius) * 0.8);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) * 1.4);
+    --radius-2xl: calc(var(--radius) * 1.8);
+    --radius-3xl: calc(var(--radius) * 2.2);
+    --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+/* Night desk: Lumen is dark-only. */
+:root,
+.dark {
+    color-scheme: dark;
+    --background: oklch(0.185 0.004 75);
+    --foreground: oklch(0.935 0.009 85);
+    --card: oklch(0.215 0.005 75);
+    --card-foreground: oklch(0.935 0.009 85);
+    --popover: oklch(0.235 0.006 75);
+    --popover-foreground: oklch(0.935 0.009 85);
+    --primary: oklch(0.76 0.13 80);
+    --primary-foreground: oklch(0.2 0.02 75);
+    --secondary: oklch(0.255 0.006 75);
+    --secondary-foreground: oklch(0.935 0.009 85);
+    --muted: oklch(0.25 0.006 75);
+    --muted-foreground: oklch(0.7 0.012 80);
+    --accent: oklch(0.27 0.008 75);
+    --accent-foreground: oklch(0.935 0.009 85);
+    --destructive: oklch(0.68 0.18 25);
+    --border: oklch(1 0 0 / 8%);
+    --input: oklch(1 0 0 / 12%);
+    --ring: oklch(0.76 0.13 80);
+    --gold: oklch(0.76 0.13 80);
+    --bubble: oklch(0.24 0.006 75);
+    --bubble-own: oklch(0.32 0.045 80);
+    --chart-1: oklch(0.76 0.13 80);
+    --chart-2: oklch(0.65 0.09 80);
+    --chart-3: oklch(0.55 0.06 80);
+    --chart-4: oklch(0.45 0.04 80);
+    --chart-5: oklch(0.35 0.02 80);
+    --radius: 0.625rem;
+    --sidebar: oklch(0.2 0.005 75);
+    --sidebar-foreground: oklch(0.935 0.009 85);
+    --sidebar-primary: oklch(0.76 0.13 80);
+    --sidebar-primary-foreground: oklch(0.2 0.02 75);
+    --sidebar-accent: oklch(0.27 0.008 75);
+    --sidebar-accent-foreground: oklch(0.935 0.009 85);
+    --sidebar-border: oklch(1 0 0 / 8%);
+    --sidebar-ring: oklch(0.76 0.13 80);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-sans antialiased;
+    font-synthesis-weight: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    @apply bg-background text-foreground;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection {
+    background: oklch(0.76 0.13 80 / 30%);
+  }
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: oklch(1 0 0 / 14%) transparent;
+  }
+}
+
+@utility lumen-glow {
+  background-image: radial-gradient(
+    60rem 32rem at 50% -12rem,
+    oklch(0.76 0.13 80 / 9%),
+    transparent 70%
+  );
+}
+
+@keyframes lumen-flash {
+  0%,
+  60% {
+    box-shadow: 0 0 0 1px var(--gold);
+  }
+  100% {
+    box-shadow: 0 0 0 1px transparent;
+  }
+}
+
+@utility lumen-flash {
+  animation: lumen-flash 1.6s ease-out 1;
+}
