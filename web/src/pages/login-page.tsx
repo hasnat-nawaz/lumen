@@ -59,7 +59,7 @@ export function LoginPage() {
     <div className="lumen-glow grid min-h-dvh place-items-center px-6 py-12">
       <div className="flex w-full max-w-sm flex-col items-center text-center">
         <img src="/lumen.svg" alt="" className="mb-6 size-10" />
-        <h1 className="font-heading text-6xl leading-none tracking-tight">
+        <h1 className="font-heading text-5xl leading-none tracking-tight">
           Lumen
         </h1>
         <p className="mt-3 text-muted-foreground">The FYP research desk.</p>

@@ -44,7 +44,7 @@ function PaperRow({
   const meta = [paper.authors, paper.year].filter(Boolean).join(" · ")
 
   return (
-    <li className="group relative">
+    <li className="group relative overflow-hidden rounded-xl border bg-card transition-colors hover:border-gold/40">
       <Link
         to={`/d/${domainSlug}/${paper.slug}`}
         onMouseEnter={prefetch}
@@ -53,7 +53,7 @@ function PaperRow({
         className="flex flex-col gap-1 px-4 py-4 transition-colors hover:bg-accent/40 focus-visible:bg-accent/40 focus-visible:outline-none sm:flex-row sm:items-center sm:gap-4 sm:px-5"
       >
         <div className="min-w-0 flex-1 pr-8 sm:pr-0">
-          <p className="font-medium text-pretty">{paper.title}</p>
+          <p className="font-medium text-pretty wrap-anywhere">{paper.title}</p>
           {meta && <p className="mt-0.5 truncate text-sm text-muted-foreground">{meta}</p>}
         </div>
         <div className="flex shrink-0 items-center gap-3 text-xs text-muted-foreground sm:pr-8">
@@ -180,7 +180,7 @@ export function DomainPage() {
           action={addPaper}
         />
       ) : (
-        <ul className="divide-y overflow-hidden rounded-xl border bg-card">
+        <ul className="grid gap-3">
           {domain.papers.map((paper) => (
             <PaperRow
               key={paper.id}

@@ -7,6 +7,7 @@ import {
   type QueryClient,
 } from "@tanstack/react-query"
 
+import { uuid } from "@/lib/browser"
 import { PDF_BUCKET, supabase } from "@/lib/supabase"
 import type { SectionKey } from "@/lib/sections"
 import { slugify, UNIQUE_VIOLATION, withSuffix } from "@/lib/slug"
@@ -199,7 +200,7 @@ export function prefetchPaper(
 }
 
 async function uploadPdf(file: File) {
-  const path = `${crypto.randomUUID()}.pdf`
+  const path = `${uuid()}.pdf`
   const { error } = await supabase.storage
     .from(PDF_BUCKET)
     .upload(path, file, { contentType: "application/pdf", upsert: false })

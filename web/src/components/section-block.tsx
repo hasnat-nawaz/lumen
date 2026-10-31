@@ -1,17 +1,26 @@
 import { useState } from "react"
-import { AtSignIcon, CheckIcon, PencilIcon } from "lucide-react"
+import {
+  AtSignIcon,
+  CheckIcon,
+  CopyIcon,
+  PencilIcon,
+  SendHorizontalIcon,
+} from "lucide-react"
 import { toast } from "sonner"
 
+import { useMember } from "@/auth/use-auth"
 import { Spinner } from "@/components/page"
 import { Button } from "@/components/ui/button"
-import { Textarea } from "@/components/ui/textarea"
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip"
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Textarea } from "@/components/ui/textarea"
+import { copyText, uuid } from "@/lib/browser"
 import { formatRelative } from "@/lib/format"
-import { useSaveSection } from "@/lib/queries"
+import { useSaveSection, useSendMessage } from "@/lib/queries"
 import type { SECTIONS } from "@/lib/sections"
 import type { PaperDetail, PaperSection } from "@/lib/types"
 
@@ -28,7 +37,9 @@ export function SectionBlock({
   value?: PaperSection
   editorName?: string
 }) {
+  const member = useMember()
   const save = useSaveSection(paper)
+  const send = useSendMessage(member.id)
   const [editing, setEditing] = useState(false)
   const [draft, setDraft] = useState("")
   const [copied, setCopied] = useState(false)
@@ -55,12 +66,23 @@ export function SectionBlock({
 
   async function copyMention() {
     try {
-      await navigator.clipboard.writeText(`${mention} `)
+      await copyText(`${mention} `)
       setCopied(true)
       setTimeout(() => setCopied(false), 1500)
+      toast.success("Tag copied")
     } catch {
-      toast.error("Copy failed")
+      toast.error("Couldn't copy the tag")
     }
+  }
+
+  function sendToChat() {
+    send.mutate(
+      { body: mention, clientId: uuid() },
+      {
+        onSuccess: () => toast.success("Sent to chat"),
+        onError: (error) => toast.error(error.message || "Couldn't send"),
+      }
+    )
   }
 
   return (
@@ -73,29 +95,37 @@ export function SectionBlock({
         <div className="min-w-0 flex-1">
           <h2
             id={`section-title-${section.key}`}
-            className="font-heading text-2xl leading-tight"
+            className="font-heading text-lg leading-tight"
           >
             {section.title}
           </h2>
           <p className="mt-0.5 text-xs text-muted-foreground">{section.hint}</p>
         </div>
         <div className="flex shrink-0 items-center gap-1">
-          <Tooltip>
-            <TooltipTrigger
+          <DropdownMenu>
+            <DropdownMenuTrigger
               render={
                 <Button
                   variant="ghost"
                   size="icon-sm"
-                  aria-label={`Copy ${mention}`}
-                  onClick={copyMention}
-                  className="text-muted-foreground"
+                  aria-label={`Share ${mention}`}
+                  className="text-muted-foreground data-popup-open:bg-muted data-popup-open:text-foreground"
                 />
               }
             >
               {copied ? <CheckIcon className="text-gold" /> : <AtSignIcon />}
-            </TooltipTrigger>
-            <TooltipContent>Copy chat tag</TooltipContent>
-          </Tooltip>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent side="top" align="end" className="w-44">
+              <DropdownMenuItem onClick={() => void copyMention()}>
+                <CopyIcon />
+                Copy tag
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={sendToChat} disabled={send.isPending}>
+                <SendHorizontalIcon />
+                Send in chat
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
           {!editing && (
             <Button variant="ghost" size="sm" onClick={startEditing}>
               <PencilIcon />
@@ -135,8 +165,14 @@ export function SectionBlock({
               >
                 Cancel
               </Button>
-              <Button size="sm" onClick={() => void commit()} disabled={save.isPending}>
-                {save.isPending && <Spinner className="text-primary-foreground" />}
+              <Button
+                size="sm"
+                onClick={() => void commit()}
+                disabled={save.isPending}
+              >
+                {save.isPending && (
+                  <Spinner className="text-primary-foreground" />
+                )}
                 Save
               </Button>
             </div>
@@ -158,7 +194,8 @@ export function SectionBlock({
 
       {value && body && !editing && (
         <p className="mt-4 text-xs text-muted-foreground">
-          Edited by {editorName ?? "someone"} · {formatRelative(value.updated_at)}
+          Edited by {editorName ?? "someone"} ·{" "}
+          {formatRelative(value.updated_at)}
         </p>
       )}
     </section>

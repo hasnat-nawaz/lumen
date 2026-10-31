@@ -56,7 +56,7 @@ export function PageTitle({
   return (
     <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
       <div className="min-w-0">
-        <h1 className="font-heading text-4xl leading-[1.05] text-balance sm:text-5xl">
+        <h1 className="font-heading text-3xl leading-tight text-balance wrap-anywhere sm:text-4xl">
           {title}
         </h1>
         {description && (
@@ -81,7 +81,7 @@ export function EmptyState({
 }) {
   return (
     <div className="flex flex-col items-center rounded-xl border border-dashed px-6 py-14 text-center">
-      <p className="font-heading text-2xl">{title}</p>
+      <p className="font-heading text-xl">{title}</p>
       <p className="mt-1 max-w-sm text-sm text-muted-foreground">{description}</p>
       {action && <div className="mt-5">{action}</div>}
     </div>
@@ -101,7 +101,7 @@ export function FullScreenLoader() {
   return (
     <div className="grid min-h-dvh place-items-center" role="status">
       <span className="sr-only">Loading Lumen</span>
-      <span className="font-heading animate-pulse text-3xl text-muted-foreground">
+      <span className="font-heading animate-pulse text-2xl text-muted-foreground">
         Lumen
       </span>
     </div>

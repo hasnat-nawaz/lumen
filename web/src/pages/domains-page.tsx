@@ -30,7 +30,7 @@ function DomainCard({
   const prefetch = () => void prefetchDomain(queryClient, domain.slug)
 
   return (
-    <div className="group relative">
+    <div className="group relative min-w-0">
       <Link
         to={`/d/${domain.slug}`}
         onMouseEnter={prefetch}
@@ -38,10 +38,10 @@ function DomainCard({
         onTouchStart={prefetch}
         className="flex h-full min-h-40 flex-col rounded-xl border bg-card p-5 transition-colors hover:border-gold/40 hover:bg-accent/40 focus-visible:ring-3 focus-visible:ring-ring/40 focus-visible:outline-none"
       >
-        <h2 className="pr-8 font-heading text-[1.65rem] leading-tight text-balance">
+        <h2 className="pr-8 font-heading text-xl leading-snug text-balance wrap-anywhere">
           {domain.title}
         </h2>
-        <p className="mt-1.5 line-clamp-2 text-sm text-muted-foreground">
+        <p className="mt-1.5 line-clamp-2 text-sm text-muted-foreground wrap-anywhere">
           {domain.description || "No description yet."}
         </p>
         <div className="mt-auto flex items-center gap-2 pt-5 text-xs text-muted-foreground">

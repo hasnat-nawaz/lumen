@@ -7,10 +7,10 @@ select u.id, t.name, t.role
   from auth.users u
   join (
     values
-      ('hasnat@lumen.app', 'Hasnat', 'admin'),
-      ('fatima@lumen.app', 'Fatima', 'member'),
-      ('atta@lumen.app', 'Atta', 'member')
-  ) as t (email, name, role) on t.email = u.email
+      ('hasnat@lumen.com', 'Hasnat', 'admin'),
+      ('fatima@lumen.com', 'Fatima', 'member'),
+      ('atta@lumen.com', 'Atta', 'member')
+  ) as t (email, name, role) on lower(t.email) = lower(u.email)
 on conflict (id) do update
   set name = excluded.name,
       role = excluded.role;

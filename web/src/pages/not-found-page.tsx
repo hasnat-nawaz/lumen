@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 export function NotFoundPage() {
   return (
     <Page className="flex flex-col items-center py-24 text-center">
-      <p className="font-heading text-5xl">Nothing here</p>
+      <p className="font-heading text-3xl">Nothing here</p>
       <p className="mt-2 max-w-sm text-muted-foreground">
         This page may have been renamed or deleted.
       </p>

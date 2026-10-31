@@ -1,5 +1,5 @@
 import { useId, useMemo, useRef, useState } from "react"
-import { SendHorizontalIcon } from "lucide-react"
+import { AtSignIcon, SendHorizontalIcon } from "lucide-react"
 
 import { MentionMenu } from "@/components/chat/mention-menu"
 import { Button } from "@/components/ui/button"
@@ -19,7 +19,10 @@ export function Composer({
   const menuId = useId()
   const textarea = useRef<HTMLTextAreaElement>(null)
   const [value, setValue] = useState("")
-  const [mention, setMention] = useState<{ query: string; start: number } | null>(null)
+  const [mention, setMention] = useState<{
+    query: string
+    start: number
+  } | null>(null)
   const [dismissedAt, setDismissedAt] = useState<number | null>(null)
   const [activeIndex, setActiveIndex] = useState(0)
 
@@ -42,10 +45,28 @@ export function Composer({
     if (!element || !mention) return
     const caret = element.selectionStart
     const insert = `@${target.path} `
-    const nextValue = value.slice(0, mention.start) + insert + value.slice(caret)
+    const nextValue =
+      value.slice(0, mention.start) + insert + value.slice(caret)
     const nextCaret = mention.start + insert.length
     setValue(nextValue)
     setMention(null)
+    requestAnimationFrame(() => {
+      element.focus()
+      element.setSelectionRange(nextCaret, nextCaret)
+    })
+  }
+
+  function startTag() {
+    const element = textarea.current
+    if (!element) return
+    const start = element.selectionStart
+    const before = value.slice(0, start)
+    const pad = before && !/\s$/.test(before) ? " " : ""
+    const nextValue = before + pad + "@" + value.slice(element.selectionEnd)
+    const nextCaret = start + pad.length + 1
+    setValue(nextValue)
+    setDismissedAt(null)
+    syncMention(nextValue, nextCaret)
     requestAnimationFrame(() => {
       element.focus()
       element.setSelectionRange(nextCaret, nextCaret)
@@ -94,59 +115,80 @@ export function Composer({
   }
 
   return (
-    <div className="relative z-20 border-t bg-background/95 px-2 pt-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] backdrop-blur-md sm:px-3">
-      {open && (
-        <MentionMenu
-          id={menuId}
-          items={items}
-          activeIndex={safeIndex}
-          onHover={setActiveIndex}
-          onPick={pick}
-        />
-      )}
-      <form
-        className="flex items-end gap-2"
-        onSubmit={(event) => {
-          event.preventDefault()
-          send()
-        }}
-      >
-        <label htmlFor={`${menuId}-input`} className="sr-only">
-          Message
-        </label>
-        <textarea
-          id={`${menuId}-input`}
-          ref={textarea}
-          rows={1}
-          value={value}
-          maxLength={4000}
-          placeholder="Message · type @ to tag"
-          role="combobox"
-          aria-expanded={open}
-          aria-controls={open ? menuId : undefined}
-          aria-activedescendant={open && items.length ? `${menuId}-${safeIndex}` : undefined}
-          aria-autocomplete="list"
-          onChange={(event) => {
-            setValue(event.target.value)
-            syncMention(event.target.value, event.target.selectionStart)
+    <div className="relative z-20 bg-card px-2 pt-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] sm:px-0">
+      <div className="relative sm:px-2">
+        {open && (
+          <MentionMenu
+            id={menuId}
+            items={items}
+            activeIndex={safeIndex}
+            onHover={setActiveIndex}
+            onPick={pick}
+          />
+        )}
+        <form
+          className="flex items-end gap-2"
+          onSubmit={(event) => {
+            event.preventDefault()
+            send()
           }}
-          onSelect={(event) =>
-            syncMention(event.currentTarget.value, event.currentTarget.selectionStart)
-          }
-          onKeyDown={onKeyDown}
-          onBlur={() => setMention(null)}
-          className="field-sizing-content max-h-36 min-h-10 flex-1 resize-none rounded-2xl border border-input bg-input/30 px-4 py-2.5 text-[15px] leading-snug outline-none placeholder:text-muted-foreground focus-visible:border-ring/60"
-        />
-        <Button
-          type="submit"
-          size="icon-lg"
-          className="size-10 shrink-0 rounded-full"
-          disabled={!value.trim()}
-          aria-label="Send"
         >
-          <SendHorizontalIcon />
-        </Button>
-      </form>
+          <div className="flex min-w-0 flex-1 items-end rounded-3xl bg-bubble px-1">
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon-lg"
+              className="my-0.5 size-9 shrink-0 rounded-full text-muted-foreground hover:bg-transparent hover:text-gold"
+              onMouseDown={(event) => event.preventDefault()}
+              onClick={startTag}
+              aria-label="Tag a domain, paper or section"
+            >
+              <AtSignIcon />
+            </Button>
+            <label htmlFor={`${menuId}-input`} className="sr-only">
+              Message
+            </label>
+            <textarea
+              id={`${menuId}-input`}
+              ref={textarea}
+              rows={1}
+              value={value}
+              maxLength={4000}
+              placeholder="Message · type @ to tag"
+              role="combobox"
+              aria-expanded={open}
+              aria-controls={open ? menuId : undefined}
+              aria-activedescendant={
+                open && items.length ? `${menuId}-${safeIndex}` : undefined
+              }
+              aria-autocomplete="list"
+              onChange={(event) => {
+                setValue(event.target.value)
+                syncMention(event.target.value, event.target.selectionStart)
+              }}
+              onSelect={(event) =>
+                syncMention(
+                  event.currentTarget.value,
+                  event.currentTarget.selectionStart
+                )
+              }
+              onKeyDown={onKeyDown}
+              onBlur={() => setMention(null)}
+              className="field-sizing-content max-h-36 min-h-10 flex-1 resize-none bg-transparent py-2.5 pr-3 text-[15px] leading-snug outline-none placeholder:text-muted-foreground"
+            />
+          </div>
+          <Button
+            type="submit"
+            size="icon-lg"
+            className="size-10 shrink-0 rounded-full transition-transform active:scale-95"
+            onMouseDown={(event) => event.preventDefault()}
+            disabled={!value.trim()}
+            aria-label="Send"
+          >
+            <SendHorizontalIcon />
+          </Button>
+        </form>
+      </div>
     </div>
   )
 }

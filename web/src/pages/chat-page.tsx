@@ -1,9 +1,11 @@
 import { useCallback, useMemo } from "react"
+import { MessagesSquareIcon } from "lucide-react"
 
 import { useMember } from "@/auth/use-auth"
 import { Composer } from "@/components/chat/composer"
 import { MessageList } from "@/components/chat/message-list"
 import { ErrorNote, PageLoader } from "@/components/page"
+import { uuid } from "@/lib/browser"
 import { buildTargets } from "@/lib/mentions"
 import {
   useMembers,
@@ -12,16 +14,21 @@ import {
   useSendMessage,
 } from "@/lib/queries"
 import type { Message } from "@/lib/types"
+import { useViewportHeight } from "@/lib/use-viewport-height"
 
 export function ChatPage() {
   const member = useMember()
   const members = useMembers()
+  const viewportHeight = useViewportHeight()
   const targetsQuery = useMentionTargets()
   const messagesQuery = useMessages()
   const send = useSendMessage(member.id)
   const { fetchNextPage, hasNextPage, isFetchingNextPage } = messagesQuery
 
-  const targets = useMemo(() => buildTargets(targetsQuery.data), [targetsQuery.data])
+  const targets = useMemo(
+    () => buildTargets(targetsQuery.data),
+    [targetsQuery.data]
+  )
   const byPath = useMemo(
     () => new Map(targets.map((target) => [target.path, target])),
     [targets]
@@ -31,7 +38,8 @@ export function ChatPage() {
     [members.data]
   )
   const colorOrder = useMemo(
-    () => (members.data ?? []).filter((m) => m.id !== member.id).map((m) => m.id),
+    () =>
+      (members.data ?? []).filter((m) => m.id !== member.id).map((m) => m.id),
     [members.data, member.id]
   )
   const messages = useMemo(
@@ -43,50 +51,55 @@ export function ChatPage() {
     if (hasNextPage && !isFetchingNextPage) void fetchNextPage()
   }, [fetchNextPage, hasNextPage, isFetchingNextPage])
 
-  const sendBody = (body: string) =>
-    send.mutate({ body, clientId: crypto.randomUUID() })
+  const sendBody = (body: string) => send.mutate({ body, clientId: uuid() })
   const retry = (message: Message) =>
     send.mutate({ body: message.body, clientId: message.client_id })
 
   return (
-    <div className="mx-auto flex h-[calc(100dvh-3.5rem-1px)] w-full max-w-3xl flex-col sm:border-x">
-      <div className="flex items-baseline justify-between border-b px-4 py-2.5">
-        <h1 className="font-heading text-2xl leading-none">Group chat</h1>
-        <p className="text-xs text-muted-foreground">
-          {members.data?.map((m) => m.name).join(", ")}
-        </p>
-      </div>
+    <div className="flex flex-1 justify-center">
+      <section
+        className="flex w-full max-w-3xl flex-col overflow-hidden sm:border-x"
+        style={{ height: `calc(${viewportHeight}px - 3.5rem - 1px)` }}
+      >
+        <h1 className="sr-only">Group chat</h1>
 
-      {messagesQuery.isPending ? (
-        <PageLoader />
-      ) : messagesQuery.error ? (
-        <div className="p-4">
-          <ErrorNote error={messagesQuery.error} />
-        </div>
-      ) : messages.length === 0 ? (
-        <div className="grid flex-1 place-items-center px-6 text-center">
-          <div>
-            <p className="font-heading text-3xl">Say hello</p>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Messages here are kept forever. Type @ to tag a domain, paper or section.
-            </p>
+        {messagesQuery.isPending ? (
+          <div className="flex flex-1 flex-col lumen-wallpaper">
+            <PageLoader />
           </div>
-        </div>
-      ) : (
-        <MessageList
-          messages={messages}
-          memberId={member.id}
-          names={names}
-          colorOrder={colorOrder}
-          byPath={byPath}
-          hasOlder={Boolean(hasNextPage)}
-          loadingOlder={isFetchingNextPage}
-          onLoadOlder={loadOlder}
-          onRetry={retry}
-        />
-      )}
+        ) : messagesQuery.error ? (
+          <div className="flex-1 lumen-wallpaper p-4">
+            <ErrorNote error={messagesQuery.error} />
+          </div>
+        ) : messages.length === 0 ? (
+          <div className="grid flex-1 place-items-center lumen-wallpaper px-6 text-center">
+            <div className="flex flex-col items-center">
+              <span className="grid size-14 place-items-center rounded-full bg-bubble text-gold">
+                <MessagesSquareIcon className="size-6" />
+              </span>
+              <p className="mt-4 font-heading text-xl">Say hello</p>
+              <p className="mt-1 max-w-xs text-sm text-muted-foreground">
+                Messages here are kept forever. Type @ to tag a domain, paper or
+                section.
+              </p>
+            </div>
+          </div>
+        ) : (
+          <MessageList
+            messages={messages}
+            memberId={member.id}
+            names={names}
+            colorOrder={colorOrder}
+            byPath={byPath}
+            hasOlder={Boolean(hasNextPage)}
+            loadingOlder={isFetchingNextPage}
+            onLoadOlder={loadOlder}
+            onRetry={retry}
+          />
+        )}
 
-      <Composer targets={targets} onSend={sendBody} />
+        <Composer targets={targets} onSend={sendBody} />
+      </section>
     </div>
   )
 }

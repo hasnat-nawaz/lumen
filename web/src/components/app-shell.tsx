@@ -1,4 +1,4 @@
-import { Suspense, useCallback, useState } from "react"
+import { Suspense } from "react"
 import {
   Link,
   NavLink,
@@ -21,8 +21,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import type { Message } from "@/lib/types"
 import { useChatRealtime } from "@/lib/use-chat-realtime"
+import { useUnreadChat } from "@/lib/use-unread-chat"
 import { cn } from "@/lib/utils"
 
 function NavItem({
@@ -50,7 +50,7 @@ function NavItem({
       <Icon className="size-4" />
       <span>{label}</span>
       {dot && (
-        <span className="absolute top-1.5 right-1.5 size-1.5 rounded-full bg-gold">
+        <span className="absolute top-1 right-1 size-2 rounded-full bg-gold ring-2 ring-background">
           <span className="sr-only">New messages</span>
         </span>
       )}
@@ -63,30 +63,20 @@ export function AppShell() {
   const { signOut } = useAuth()
   const location = useLocation()
   const onChat = location.pathname === "/chat"
-  const [unread, setUnread] = useState(false)
-
-  const onIncoming = useCallback(
-    (message: Message) => {
-      if (message.author_id !== member.id && !onChat) setUnread(true)
-    },
-    [member.id, onChat]
-  )
-  useChatRealtime(onIncoming)
-
-  const showDot = unread && !onChat
-  if (unread && onChat) setUnread(false)
+  const { unread: showDot, noteIncoming } = useUnreadChat(member.id, onChat)
+  useChatRealtime(noteIncoming)
 
   return (
     <div className="flex min-h-dvh flex-col">
       <header className="sticky top-0 z-40 border-b bg-background/90 backdrop-blur-md">
-        <div className="mx-auto flex h-14 w-full max-w-6xl items-center gap-2 px-4 sm:px-6">
+        <div className="mx-auto grid h-14 w-full max-w-6xl grid-cols-[1fr_auto_1fr] items-center gap-2 px-4 sm:px-6">
           <Link
             to="/"
-            className="mr-2 font-heading text-[1.7rem] leading-none tracking-tight sm:mr-4"
+            className="justify-self-start font-heading text-xl leading-none tracking-tight"
           >
             Lumen
           </Link>
-          <nav className="flex items-center gap-1" aria-label="Main">
+          <nav className="hidden items-center gap-1 sm:flex" aria-label="Main">
             <NavItem to="/" icon={LibraryIcon} label="Library" />
             <NavItem
               to="/chat"
@@ -95,10 +85,12 @@ export function AppShell() {
               dot={showDot}
             />
           </nav>
-          <div className="ml-auto">
+          <div className="col-start-3 justify-self-end">
             <DropdownMenu>
               <DropdownMenuTrigger
-                render={<Button variant="ghost" className="gap-2 pr-2 pl-1.5" />}
+                render={
+                  <Button variant="ghost" className="gap-2 pr-2 pl-1.5" />
+                }
               >
                 <span className="grid size-6 place-items-center rounded-full bg-gold/15 text-xs font-medium text-gold">
                   {member.name[0]}
@@ -124,11 +116,23 @@ export function AppShell() {
           </div>
         </div>
       </header>
-      <main className="flex flex-1 flex-col">
+      <main className={cn("flex flex-1 flex-col", !onChat && "pb-24 sm:pb-0")}>
         <Suspense fallback={<PageLoader />}>
           <Outlet />
         </Suspense>
       </main>
+      {!onChat && (
+        <Link
+          to="/chat"
+          aria-label={showDot ? "Chat, new messages" : "Chat"}
+          className="fixed right-4 bottom-[calc(1rem+env(safe-area-inset-bottom))] z-40 grid size-14 place-items-center rounded-full border bg-popover text-gold shadow-lg shadow-black/40 transition-transform active:scale-95 sm:hidden"
+        >
+          <MessagesSquareIcon className="size-6" />
+          {showDot && (
+            <span className="absolute top-0.5 right-0.5 size-3 rounded-full bg-gold ring-2 ring-background" />
+          )}
+        </Link>
+      )}
       <ScrollRestoration
         getKey={(location) =>
           location.pathname.split("/").slice(0, 4).join("/")

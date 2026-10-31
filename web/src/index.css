@@ -1,14 +1,13 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
-@import "@fontsource-variable/geist";
-@import "@fontsource/instrument-serif";
+@import "@fontsource-variable/manrope";
 
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-    --font-heading: 'Instrument Serif', ui-serif, Georgia, serif;
-    --font-sans: 'Geist Variable', ui-sans-serif, system-ui, sans-serif;
+    --font-heading: 'Manrope Variable', ui-sans-serif, system-ui, sans-serif;
+    --font-sans: 'Manrope Variable', ui-sans-serif, system-ui, sans-serif;
     --color-gold: var(--gold);
     --color-bubble: var(--bubble);
     --color-bubble-own: var(--bubble-own);
@@ -106,6 +105,12 @@
     @apply bg-background text-foreground;
     text-rendering: optimizeLegibility;
   }
+  h1,
+  h2,
+  .font-heading {
+    font-weight: 650;
+    letter-spacing: -0.02em;
+  }
   ::selection {
     background: oklch(0.76 0.13 80 / 30%);
   }
@@ -121,6 +126,12 @@
     oklch(0.76 0.13 80 / 9%),
     transparent 70%
   );
+}
+
+@utility lumen-wallpaper {
+  background-color: oklch(0.165 0.004 75);
+  background-image: radial-gradient(oklch(1 0 0 / 5%) 1px, transparent 1.2px);
+  background-size: 18px 18px;
 }
 
 @keyframes lumen-flash {

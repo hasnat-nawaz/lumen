@@ -61,15 +61,42 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [userId, loaded])
 
   const signInWithPin = useCallback(async (pin: string) => {
-    const { data: email, error } = await supabase.rpc("email_for_pin", { pin })
-    if (error) throw new Error("Lumen could not reach the server. Try again.")
-    if (!email) throw new Error("That PIN doesn't match anyone.")
+    // Each person's PIN is their Auth password. Try the fixed team emails.
+    const teamEmails = [
+      "hasnat@lumen.com",
+      "fatima@lumen.com",
+      "atta@lumen.com",
+    ]
 
-    const { error: signInError } = await supabase.auth.signInWithPassword({
-      email: email as string,
-      password: pin,
-    })
-    if (signInError) throw new Error("Sign in failed. Try again.")
+    let lastAuthError: string | null = null
+    for (const email of teamEmails) {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password: pin,
+      })
+      if (!error) return
+
+      const message = error.message || "Unknown auth error"
+      lastAuthError = message
+      const lower = message.toLowerCase()
+      // Wrong PIN for this email — try the next person.
+      if (
+        lower.includes("invalid login") ||
+        lower.includes("invalid credentials") ||
+        lower.includes("invalid email or password") ||
+        error.status === 400
+      ) {
+        continue
+      }
+      // Real failure (network, disabled provider, unconfirmed, bad API key, …)
+      throw new Error(message)
+    }
+
+    throw new Error(
+      lastAuthError
+        ? `That PIN doesn't match anyone. (${lastAuthError})`
+        : "That PIN doesn't match anyone."
+    )
   }, [])
 
   const signOut = useCallback(async () => {
