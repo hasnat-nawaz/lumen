@@ -3,6 +3,7 @@
 The FYP research desk for Hasnat, Fatima and Atta: domains → papers → six sections per paper, plus a permanent group chat with `@` tags.
 
 - `web/` — the website (Vite + React + shadcn/ui)
+- `mcp/` — MCP server so AI assistants (Claude, Gemini, Cursor…) can read and fill Lumen
 - `supabase/schema.sql` — database, security rules, PDF storage, realtime chat
 - `supabase/seed.sql` — links the three team accounts to their names and roles
 - `netlify.toml` — Netlify build settings
@@ -29,6 +30,21 @@ npm run dev
 ## Deploy on Netlify
 
 Import the GitHub repo, keep the settings from `netlify.toml`, and add `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` under Site configuration → Environment variables.
+
+## AI assistants (MCP)
+
+`mcp/` lets an AI assistant create domains, add papers and fill their sections while you research with it. It signs in as one team member, so the website's normal permissions apply and edits are credited to that person.
+
+```bash
+cd mcp
+npm install            # needs Node 22.18 or newer
+cp .env.example .env   # set LUMEN_EMAIL and LUMEN_PIN
+npm run check          # should print "Lumen MCP is ready. Signed in as …"
+```
+
+Supabase settings are read from `web/.env` when `mcp/.env` leaves them empty. Then add the server to your AI app as a local (stdio) MCP server that runs `node <full path>/mcp/src/index.ts`, and restart the app.
+
+The assistant learns the structure itself: the section list comes straight from `web/src/lib/sections.ts`, so pulling new changes and restarting the AI app is enough. When adding or renaming a section, update the `paper_sections` key check in `supabase/schema.sql` too.
 
 ## Changing a PIN
 

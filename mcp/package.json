@@ -1,0 +1,24 @@
+{
+  "name": "lumen-mcp",
+  "private": true,
+  "version": "0.1.0",
+  "description": "MCP server that lets AI assistants read and fill the Lumen research desk",
+  "type": "module",
+  "engines": {
+    "node": ">=22.18"
+  },
+  "scripts": {
+    "start": "node src/index.ts",
+    "check": "node src/index.ts --check",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.2",
+    "@supabase/supabase-js": "^2.118.0",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "typescript": "^7.0.2"
+  }
+}
