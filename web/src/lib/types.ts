@@ -43,7 +43,11 @@ export type PaperDetail = PaperSummary & {
   paper_sections: PaperSection[]
 }
 
-export type DomainDetail = Domain & { papers: PaperSummary[] }
+export type PaperListItem = PaperSummary & {
+  paper_sections: { key: SectionKey }[]
+}
+
+export type DomainDetail = Domain & { papers: PaperListItem[] }
 
 export type Message = {
   id: number

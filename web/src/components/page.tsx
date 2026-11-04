@@ -101,7 +101,7 @@ export function FullScreenLoader() {
   return (
     <div className="grid min-h-dvh place-items-center" role="status">
       <span className="sr-only">Loading Lumen</span>
-      <span className="font-heading animate-pulse text-2xl text-muted-foreground">
+      <span className="font-heading text-2xl text-muted-foreground">
         Lumen
       </span>
     </div>

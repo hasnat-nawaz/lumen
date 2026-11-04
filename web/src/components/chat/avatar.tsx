@@ -34,7 +34,7 @@ export function Avatar({
       aria-hidden
       className={cn(
         "grid size-7 shrink-0 place-items-center rounded-full text-xs font-semibold select-none",
-        own ? "bg-gold/15 text-gold" : TONES[tone],
+        own ? "bg-muted text-foreground" : TONES[tone],
         className
       )}
     >

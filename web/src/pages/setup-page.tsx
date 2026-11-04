@@ -1,6 +1,6 @@
 export function SetupPage() {
   return (
-    <div className="lumen-glow grid min-h-dvh place-items-center px-6">
+    <div className="grid min-h-dvh place-items-center px-6">
       <div className="max-w-md text-center">
         <h1 className="font-heading text-4xl">Lumen</h1>
         <p className="mt-4 text-muted-foreground">

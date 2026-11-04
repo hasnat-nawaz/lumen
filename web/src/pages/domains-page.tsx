@@ -36,13 +36,13 @@ function DomainCard({
         onMouseEnter={prefetch}
         onFocus={prefetch}
         onTouchStart={prefetch}
-        className="flex h-full min-h-40 flex-col rounded-xl border bg-card p-5 transition-colors hover:border-gold/40 hover:bg-accent/40 focus-visible:ring-3 focus-visible:ring-ring/40 focus-visible:outline-none"
+        className="flex h-full min-h-40 flex-col rounded-xl border bg-card p-5 transition-colors hover:border-foreground/15 hover:bg-accent/40 focus-visible:ring-3 focus-visible:ring-ring/40 focus-visible:outline-none"
       >
         <h2 className="pr-8 font-heading text-xl leading-snug text-balance wrap-anywhere">
           {domain.title}
         </h2>
-        <p className="mt-1.5 line-clamp-2 text-sm text-muted-foreground wrap-anywhere">
-          {domain.description || "No description yet."}
+        <p className="mt-2 line-clamp-2 text-sm text-muted-foreground wrap-anywhere">
+          {domain.description || "No description yet"}
         </p>
         <div className="mt-auto flex items-center gap-2 pt-5 text-xs text-muted-foreground">
           <span className="text-foreground/90 tabular-nums">
@@ -98,7 +98,7 @@ export function DomainsPage() {
       {data && data.length === 0 && (
         <EmptyState
           title="No domains yet"
-          description="Start with a lane you want to explore, then add papers to it."
+          description="Start with a lane you want to explore, then add papers to it"
           action={<AddDomainDialog />}
         />
       )}

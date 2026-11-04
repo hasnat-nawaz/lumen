@@ -85,9 +85,10 @@ async function fetchDomain(slug: string) {
     await supabase
       .from("domains")
       .select(
-        `id, slug, title, description, created_by, created_at, papers(${PAPER_FIELDS})`
+        `id, slug, title, description, created_by, created_at, papers(${PAPER_FIELDS}, paper_sections(key))`
       )
       .eq("slug", slug)
+      .neq("papers.paper_sections.body", "")
       .order("created_at", { referencedTable: "papers", ascending: false })
       .maybeSingle()
   )
@@ -317,7 +318,10 @@ export function useSaveSection(paper: PaperDetail) {
             { onConflict: "paper_id,key" }
           )
       ),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey })
+      queryClient.invalidateQueries({ queryKey: keys.domain(paper.domain.slug) })
+    },
   })
 }
 

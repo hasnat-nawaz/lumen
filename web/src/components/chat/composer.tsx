@@ -138,7 +138,7 @@ export function Composer({
               type="button"
               variant="ghost"
               size="icon-lg"
-              className="my-0.5 size-9 shrink-0 rounded-full text-muted-foreground hover:bg-transparent hover:text-gold"
+              className="my-0.5 size-9 shrink-0 rounded-full text-muted-foreground hover:bg-transparent hover:text-foreground"
               onMouseDown={(event) => event.preventDefault()}
               onClick={startTag}
               aria-label="Tag a domain, paper or section"
@@ -180,7 +180,7 @@ export function Composer({
           <Button
             type="submit"
             size="icon-lg"
-            className="size-10 shrink-0 rounded-full transition-transform active:scale-95"
+            className="size-10 shrink-0 rounded-full"
             onMouseDown={(event) => event.preventDefault()}
             disabled={!value.trim()}
             aria-label="Send"

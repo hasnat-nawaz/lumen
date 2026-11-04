@@ -127,7 +127,7 @@ export function MessageList({
             <Fragment key={message.client_id}>
               {newDay && (
                 <div className="sticky top-0 z-10 my-4 flex justify-center">
-                  <span className="rounded-lg bg-bubble px-3 py-1 text-[11.5px] font-medium text-muted-foreground shadow-sm shadow-black/30">
+                  <span className="rounded-lg bg-bubble px-3 py-1 text-xs font-medium text-muted-foreground shadow-sm shadow-black/30">
                     {formatDay(message.created_at)}
                   </span>
                 </div>
@@ -147,7 +147,7 @@ export function MessageList({
                   ))}
                 <div
                   className={cn(
-                    "max-w-[82%] rounded-lg px-2.5 py-1.5 text-[14.5px] leading-snug shadow-sm shadow-black/30 sm:max-w-[65%]",
+                    "max-w-[82%] rounded-lg px-2.5 py-1.5 text-[15px] leading-snug shadow-sm shadow-black/30 sm:max-w-[65%]",
                     own ? "bg-bubble-own" : "bg-bubble",
                     !grouped && (own ? "rounded-tr-none" : "rounded-tl-none"),
                     message.pending && "opacity-70",
@@ -166,7 +166,7 @@ export function MessageList({
                   )}
                   <p className="break-words whitespace-pre-wrap">
                     <MessageBody body={message.body} byPath={byPath} />
-                    <span className="float-right mt-1.5 ml-2.5 inline-flex translate-y-0.5 items-center gap-1 text-[10.5px] leading-none text-muted-foreground select-none">
+                    <span className="float-right mt-1.5 ml-2.5 inline-flex translate-y-0.5 items-center gap-1 text-[11px] leading-none text-muted-foreground select-none">
                       {message.pending && (
                         <ClockIcon className="size-3" aria-label="Sending" />
                       )}

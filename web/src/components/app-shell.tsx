@@ -6,7 +6,7 @@ import {
   ScrollRestoration,
   useLocation,
 } from "react-router-dom"
-import { LibraryIcon, LogOutIcon, MessagesSquareIcon } from "lucide-react"
+import { FolderIcon, LogOutIcon, MessagesSquareIcon } from "lucide-react"
 
 import { useAuth, useMember } from "@/auth/use-auth"
 import { PageLoader } from "@/components/page"
@@ -30,11 +30,13 @@ function NavItem({
   icon: Icon,
   label,
   dot,
+  active,
 }: {
   to: string
-  icon: typeof LibraryIcon
+  icon: typeof FolderIcon
   label: string
   dot?: boolean
+  active?: boolean
 }) {
   return (
     <NavLink
@@ -42,8 +44,8 @@ function NavItem({
       end={to === "/"}
       className={({ isActive }) =>
         cn(
-          "relative inline-flex h-8 items-center gap-1.5 rounded-lg px-2.5 text-sm text-muted-foreground transition-colors hover:bg-muted/60 hover:text-foreground",
-          isActive && "bg-muted text-foreground"
+          "relative inline-flex h-8 items-center gap-2 rounded-lg px-2.5 text-sm text-muted-foreground transition-colors hover:bg-muted/60 hover:text-foreground",
+          (active ?? isActive) && "bg-muted text-foreground"
         )
       }
     >
@@ -72,12 +74,17 @@ export function AppShell() {
         <div className="mx-auto grid h-14 w-full max-w-6xl grid-cols-[1fr_auto_1fr] items-center gap-2 px-4 sm:px-6">
           <Link
             to="/"
-            className="justify-self-start font-heading text-xl leading-none tracking-tight"
+            className="justify-self-start font-heading text-xl leading-none"
           >
             Lumen
           </Link>
           <nav className="hidden items-center gap-1 sm:flex" aria-label="Main">
-            <NavItem to="/" icon={LibraryIcon} label="Library" />
+            <NavItem
+              to="/"
+              icon={FolderIcon}
+              label="Domains"
+              active={location.pathname === "/" || location.pathname.startsWith("/d/")}
+            />
             <NavItem
               to="/chat"
               icon={MessagesSquareIcon}
@@ -92,7 +99,7 @@ export function AppShell() {
                   <Button variant="ghost" className="gap-2 pr-2 pl-1.5" />
                 }
               >
-                <span className="grid size-6 place-items-center rounded-full bg-gold/15 text-xs font-medium text-gold">
+                <span className="grid size-6 place-items-center rounded-full bg-muted text-xs font-medium text-foreground">
                   {member.name[0]}
                 </span>
                 <span className="hidden sm:inline">{member.name}</span>
@@ -125,7 +132,7 @@ export function AppShell() {
         <Link
           to="/chat"
           aria-label={showDot ? "Chat, new messages" : "Chat"}
-          className="fixed right-4 bottom-[calc(1rem+env(safe-area-inset-bottom))] z-40 grid size-14 place-items-center rounded-full border bg-popover text-gold shadow-lg shadow-black/40 transition-transform active:scale-95 sm:hidden"
+          className="fixed right-4 bottom-[calc(1rem+env(safe-area-inset-bottom))] z-40 grid size-14 place-items-center rounded-full border bg-popover text-foreground shadow-lg shadow-black/40 transition-transform active:scale-95 sm:hidden"
         >
           <MessagesSquareIcon className="size-6" />
           {showDot && (

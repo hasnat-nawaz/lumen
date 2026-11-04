@@ -15,7 +15,7 @@ function PinSlot({ index }: { index: number }) {
   return (
     <div
       className={cn(
-        "relative grid size-10 place-items-center rounded-lg border border-input bg-input/30 text-lg transition-all sm:size-11",
+        "relative grid size-10 place-items-center rounded-lg border border-input bg-input/30 text-lg transition-[border-color,box-shadow] sm:size-11",
         slot.isActive && "border-ring ring-3 ring-ring/30"
       )}
     >
@@ -49,20 +49,20 @@ export function LoginPage() {
     try {
       await auth.signInWithPin(value)
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Sign in failed.")
+      setError(err instanceof Error ? err.message : "Sign in failed")
       setPin("")
       setBusy(false)
     }
   }
 
   return (
-    <div className="lumen-glow grid min-h-dvh place-items-center px-6 py-12">
+    <div className="grid min-h-dvh place-items-center px-6 py-12">
       <div className="flex w-full max-w-sm flex-col items-center text-center">
         <img src="/lumen.svg" alt="" className="mb-6 size-10" />
         <h1 className="font-heading text-5xl leading-none tracking-tight">
           Lumen
         </h1>
-        <p className="mt-3 text-muted-foreground">The FYP research desk.</p>
+        <p className="mt-3 text-muted-foreground">The FYP research desk</p>
 
         <form
           className="mt-10 flex w-full flex-col items-center gap-5"

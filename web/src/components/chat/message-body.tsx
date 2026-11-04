@@ -38,7 +38,7 @@ export function MessageBody({
               href={part.value}
               target="_blank"
               rel="noreferrer"
-              className="break-all text-gold underline underline-offset-2"
+              className="break-all text-foreground underline decoration-foreground/40 underline-offset-2 transition-colors hover:decoration-foreground"
             >
               {part.value}
             </a>

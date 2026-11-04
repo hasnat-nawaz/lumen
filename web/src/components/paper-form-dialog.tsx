@@ -206,7 +206,7 @@ export function PaperFormDialog({
             />
             {file ? (
               <div className="flex items-center gap-2 rounded-lg border bg-input/20 px-3 py-2 text-sm">
-                <FileUpIcon className="size-4 shrink-0 text-gold" />
+                <FileUpIcon className="size-4 shrink-0 text-muted-foreground" />
                 <span className="min-w-0 flex-1 truncate">{file.name}</span>
                 <span className="shrink-0 text-xs text-muted-foreground tabular-nums">
                   {(file.size / 1024 / 1024).toFixed(1)} MB
@@ -230,7 +230,7 @@ export function PaperFormDialog({
                   event.preventDefault()
                   pickFile(event.dataTransfer.files[0])
                 }}
-                className="flex flex-col items-center gap-1 rounded-lg border border-dashed px-4 py-5 text-sm text-muted-foreground transition-colors hover:border-gold/40 hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/40 focus-visible:outline-none"
+                className="flex flex-col items-center gap-1 rounded-lg border border-dashed px-4 py-5 text-sm text-muted-foreground transition-colors hover:border-foreground/20 hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/40 focus-visible:outline-none"
               >
                 <FileUpIcon className="size-5" />
                 {initial.hasPdf ? "Replace the current PDF" : "Choose or drop a PDF"}

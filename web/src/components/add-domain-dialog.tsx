@@ -89,7 +89,7 @@ export function AddDomainDialog({ variant = "default" }: { variant?: "default" |
               id="domain-description"
               value={description}
               onChange={(event) => setDescription(event.target.value)}
-              placeholder="What this lane is about, in a line or two."
+              placeholder="What this lane is about, in a line or two"
               maxLength={280}
               className="min-h-20"
             />

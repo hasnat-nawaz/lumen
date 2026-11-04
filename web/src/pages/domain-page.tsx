@@ -24,8 +24,27 @@ import {
   useDomain,
   useMemberNames,
 } from "@/lib/queries"
-import type { PaperSummary } from "@/lib/types"
+import { SECTIONS, type SectionKey } from "@/lib/sections"
+import type { PaperListItem } from "@/lib/types"
+import { cn } from "@/lib/utils"
 import { NotFoundPage } from "@/pages/not-found-page"
+
+function SectionDots({ written }: { written: Set<SectionKey> }) {
+  const label = `${written.size} of ${SECTIONS.length} sections written`
+  return (
+    <span role="img" aria-label={label} title={label} className="inline-flex items-center gap-1">
+      {SECTIONS.map((section) => (
+        <span
+          key={section.key}
+          className={cn(
+            "size-1.5 rounded-full",
+            written.has(section.key) ? "bg-gold" : "bg-muted-foreground/30"
+          )}
+        />
+      ))}
+    </span>
+  )
+}
 
 function PaperRow({
   paper,
@@ -33,7 +52,7 @@ function PaperRow({
   addedBy,
   canDelete,
 }: {
-  paper: PaperSummary
+  paper: PaperListItem
   domainSlug: string
   addedBy?: string
   canDelete: boolean
@@ -42,9 +61,10 @@ function PaperRow({
   const deletePaper = useDeletePaper(paper, domainSlug)
   const prefetch = () => void prefetchPaper(queryClient, domainSlug, paper.slug)
   const meta = [paper.authors, paper.year].filter(Boolean).join(" · ")
+  const written = new Set(paper.paper_sections.map((section) => section.key))
 
   return (
-    <li className="group relative overflow-hidden rounded-xl border bg-card transition-colors hover:border-gold/40">
+    <li className="group relative overflow-hidden rounded-xl border bg-card transition-colors hover:border-foreground/15">
       <Link
         to={`/d/${domainSlug}/${paper.slug}`}
         onMouseEnter={prefetch}
@@ -56,10 +76,11 @@ function PaperRow({
           <p className="font-medium text-pretty wrap-anywhere">{paper.title}</p>
           {meta && <p className="mt-0.5 truncate text-sm text-muted-foreground">{meta}</p>}
         </div>
-        <div className="flex shrink-0 items-center gap-3 text-xs text-muted-foreground sm:pr-8">
+        <div className="mt-2 flex shrink-0 flex-wrap items-center gap-x-4 gap-y-2 text-xs text-muted-foreground sm:mt-0 sm:pr-8">
+          <SectionDots written={written} />
           {paper.pdf_path && (
             <span className="inline-flex items-center gap-1">
-              <FileTextIcon className="size-3.5 text-gold" /> PDF
+              <FileTextIcon className="size-3.5" /> PDF
             </span>
           )}
           {paper.external_url && (
@@ -176,7 +197,7 @@ export function DomainPage() {
       {domain.papers.length === 0 ? (
         <EmptyState
           title="No papers yet"
-          description="Add the first research paper for this domain."
+          description="Add the first research paper for this domain"
           action={addPaper}
         />
       ) : (

@@ -74,7 +74,7 @@ export function ChatPage() {
         ) : messages.length === 0 ? (
           <div className="grid flex-1 place-items-center lumen-wallpaper px-6 text-center">
             <div className="flex flex-col items-center">
-              <span className="grid size-14 place-items-center rounded-full bg-bubble text-gold">
+              <span className="grid size-14 place-items-center rounded-full bg-bubble text-muted-foreground">
                 <MessagesSquareIcon className="size-6" />
               </span>
               <p className="mt-4 font-heading text-xl">Say hello</p>

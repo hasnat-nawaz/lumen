@@ -47,7 +47,7 @@ export function MentionMenu({
                   index === activeIndex && "bg-accent"
                 )}
               >
-                <Icon className={cn("size-4 shrink-0", item.kind === "domain" ? "text-gold" : "text-muted-foreground")} />
+                <Icon className="size-4 shrink-0 text-muted-foreground" />
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm">
                     {section ? (
@@ -64,7 +64,7 @@ export function MentionMenu({
                       domain
                     )}
                   </p>
-                  <p className="truncate font-mono text-[11px] text-muted-foreground">
+                  <p className="truncate font-mono text-xs text-muted-foreground">
                     @{item.path}
                   </p>
                 </div>

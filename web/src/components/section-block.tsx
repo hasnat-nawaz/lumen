@@ -113,7 +113,7 @@ export function SectionBlock({
                 />
               }
             >
-              {copied ? <CheckIcon className="text-gold" /> : <AtSignIcon />}
+              {copied ? <CheckIcon className="text-foreground" /> : <AtSignIcon />}
             </DropdownMenuTrigger>
             <DropdownMenuContent side="top" align="end" className="w-44">
               <DropdownMenuItem onClick={() => void copyMention()}>
@@ -185,7 +185,7 @@ export function SectionBlock({
           <button
             type="button"
             onClick={startEditing}
-            className="w-full rounded-lg border border-dashed px-4 py-6 text-left text-sm text-muted-foreground transition-colors hover:border-gold/40 hover:text-foreground"
+            className="w-full rounded-lg border border-dashed px-4 py-6 text-left text-sm text-muted-foreground transition-colors hover:border-foreground/20 hover:text-foreground"
           >
             Nothing here yet. Click to write the {section.title.toLowerCase()}.
           </button>
