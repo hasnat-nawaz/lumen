@@ -9,7 +9,8 @@ select u.id, t.name, t.role
     values
       ('hasnat@lumen.com', 'Hasnat', 'admin'),
       ('fatima@lumen.com', 'Fatima', 'member'),
-      ('atta@lumen.com', 'Atta', 'member')
+      ('atta@lumen.com', 'Atta', 'member'),
+      ('labiba@lumen.com', 'Labiba', 'member')
   ) as t (email, name, role) on lower(t.email) = lower(u.email)
 on conflict (id) do update
   set name = excluded.name,

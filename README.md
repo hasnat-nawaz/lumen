@@ -21,9 +21,9 @@ npm run dev
 
 1. Create a free project at [supabase.com](https://supabase.com).
 2. SQL Editor → New query → paste all of `supabase/schema.sql` → Run.
-3. Authentication → Users → Add user → Create new user, three times, with "Auto Confirm User" ticked. Use `hasnat@lumen.com`, `fatima@lumen.com` and `atta@lumen.com`, and set each password to that person's PIN. Keep PINs out of this repo.
+3. Authentication → Users → Add user → Create new user for each teammate, with "Auto Confirm User" ticked. Use `hasnat@lumen.com`, `fatima@lumen.com`, `atta@lumen.com` and `labiba@lumen.com`, and set each password to that person's PIN. Keep PINs out of this repo.
 
-4. SQL Editor → paste `supabase/seed.sql` → Run. It should list all three people.
+4. SQL Editor → paste `supabase/seed.sql` → Run. It should list all four people.
 5. Authentication → Sign In / Providers → turn off "Allow new users to sign up".
 6. Project Settings → API → copy the Project URL and the anon (or publishable) key into `web/.env`.
 

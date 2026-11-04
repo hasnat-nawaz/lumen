@@ -66,6 +66,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       "hasnat@lumen.com",
       "fatima@lumen.com",
       "atta@lumen.com",
+      "labiba@lumen.com",
     ]
 
     let lastAuthError: string | null = null
